@@ -35,16 +35,23 @@ get_velocity()
 
     local interval=$(get_tmux_option 'status-interval' 5)
     local vel=$(( ( new_value - old_value ) / interval ))
-    local vel_kb=$(( vel / THOUSAND ))
-    local vel_mb=$(( vel / MILLION ))
+#    local vel_kb=$(bc -l <<< "scale=2; $vel / $THOUSAND")
+    local vel_mb=$(bc -l <<< "scale=2; $vel / $MILLION")
 
-    if [[ $vel_mb != 0 ]] ; then
-        echo -n "$vel_mb MB/s"
-    elif [[ $vel_kb != 0 ]] ; then
-        echo -n "$vel_kb KB/s";
-    else
-        echo -n "$vel B/s";
-    fi
+#    if [[ $vel_mb != 0 ]] ; then
+	vel_mb=$(echo "$vel_mb" | awk '{printf "%.2f", $0}')
+ #   fi
+    echo -n "$vel_mb"
+        
+#        echo -n "$vel_mb MB/s"
+#    else #[[ $vel_kb != 0 ]] ; then
+#        if [[ $vel_kb != 0 ]]; then
+#          vel_kb=$(echo "$vel_kb" | awk '{printf "%.2f", $0}')
+#	fi
+#        echo -n "$vel_kb KB/s";
+#    else
+#        echo -n "$vel B/s";
+#    fi
 }
 
 # Reads from value from file. If file does not exist,
